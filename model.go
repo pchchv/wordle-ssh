@@ -134,6 +134,19 @@ func (m *model) doWin() tea.Cmd {
 	)
 }
 
+// Called when the user has used up all their guesses
+func (m *model) doLoss() tea.Cmd {
+	m.gameOver = true
+	msg := fmt.Sprintf("The word was %s. Better luck next time!", string(m.word[:]))
+	return tea.Sequentially(
+		m.withDb(func(db *db) {
+			db.addLoss()
+			m.score = db.score()
+		}),
+		m.setStatus(msg, 0),
+	)
+}
+
 // Returns the appropriate dark mode color for the given key state
 func (s keyState) color() lipgloss.Color {
 	switch s {
