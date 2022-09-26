@@ -35,6 +35,14 @@ type model struct {
 	gridCol       int
 }
 
+func (m *model) Init() tea.Cmd {
+	m.keyStates = make(map[byte]keyState, 26)
+	return m.withDb(func(db *db) {
+		m.score = db.score()
+		m.reset()
+	})
+}
+
 // Sets the status message, and returns a tea.Cmd that restores the
 // default status message after a delay
 func (m *model) setStatus(msg string, duration time.Duration) tea.Cmd {
