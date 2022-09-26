@@ -101,3 +101,11 @@ func (m *model) reset() {
 func (*model) doExit() tea.Cmd {
 	return tea.Quit
 }
+
+// Deletes the last character in the current word
+func (m *model) doDeleteChar() tea.Cmd {
+	if !m.gameOver && m.gridCol > 0 {
+		m.gridCol--
+	}
+	return nil
+}
