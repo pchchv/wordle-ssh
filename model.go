@@ -72,3 +72,19 @@ func (m *model) reportError(err error, msg string) tea.Cmd {
 func (m *model) resetStatus() {
 	m.status = fmt.Sprintf("Score: %d", m.score)
 }
+
+func (m *model) reset() {
+	// Unlock and reset the grid
+	m.gameOver = false
+	m.gridCol = 0
+	m.gridRow = 0
+	// Clear the key state
+	for k := range m.keyStates {
+		delete(m.keyStates, k)
+	}
+	// Set the puzzle word
+	word := getWord()
+	copy(m.word[:], word)
+	// Reset the status message
+	m.resetStatus()
+}
