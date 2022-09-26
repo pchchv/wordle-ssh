@@ -1,5 +1,13 @@
 package main
 
+import "math/rand"
+
+// Retrieves a random common word
+func getWord() string {
+	idx := rand.Intn(len(wordsCommon))
+	return wordsCommon[idx]
+}
+
 var (
 	// List of commonly used words
 	wordsCommon = []string{
