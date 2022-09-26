@@ -1,6 +1,10 @@
 package main
 
-import tea "github.com/charmbracelet/bubbletea"
+import (
+	"time"
+
+	tea "github.com/charmbracelet/bubbletea"
+)
 
 const (
 	numGuesses = 6 // Maximum number of guesses you can make
@@ -8,6 +12,12 @@ const (
 )
 
 var _ tea.Model = (*model)(nil)
+
+// Represents the state of a key
+type keyState int
+
+// Sent when the status line should be reset
+type msgResetStatus struct{}
 
 type model struct {
 	score         int
@@ -24,5 +34,15 @@ type model struct {
 	gridCol       int
 }
 
-// Represents the state of a key
-type keyState int
+// Sets the status message, and returns a tea.Cmd that restores the
+// default status message after a delay
+func (m *model) setStatus(msg string, duration time.Duration) tea.Cmd {
+	m.status = msg
+	if duration > 0 {
+		m.statusPending++
+		return tea.Tick(duration, func(time.Time) tea.Msg {
+			return msgResetStatus{}
+		})
+	}
+	return nil
+}
