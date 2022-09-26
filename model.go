@@ -122,6 +122,18 @@ func (m *model) doDeleteChar() tea.Cmd {
 	return nil
 }
 
+// Called when the user has guessed the word correctly
+func (m *model) doWin() tea.Cmd {
+	m.gameOver = true
+	return tea.Sequentially(
+		m.withDb(func(db *db) {
+			db.addWin(m.gridRow)
+			m.score = db.score()
+		}),
+		m.setStatus("You win!", 0),
+	)
+}
+
 // Returns the appropriate dark mode color for the given key state
 func (s keyState) color() lipgloss.Color {
 	switch s {
