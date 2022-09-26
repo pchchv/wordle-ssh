@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -49,7 +50,7 @@ func (m *model) setStatus(msg string, duration time.Duration) tea.Cmd {
 
 // withDb runs a function in the context of the database. The database is
 // automatically saved at the end.
-func (m *model) withDB(f func(db *db)) tea.Cmd {
+func (m *model) withDb(f func(db *db)) tea.Cmd {
 	db, err := loadDb()
 	if err != nil {
 		return m.reportError(err, "Error loading database.")
@@ -65,4 +66,9 @@ func (m *model) withDB(f func(db *db)) tea.Cmd {
 func (m *model) reportError(err error, msg string) tea.Cmd {
 	m.errors = append(m.errors, err)
 	return m.setStatus(msg, 3*time.Second)
+}
+
+// Immediately resets the status message to its default value
+func (m *model) resetStatus() {
+	m.status = fmt.Sprintf("Score: %d", m.score)
 }
