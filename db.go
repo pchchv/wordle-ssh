@@ -69,3 +69,8 @@ func (db *db) addWin(guesses int) {
 	}
 	db.Guesses[guesses]++
 }
+
+// addLoss adds a loss to the game statistics.
+func (db *db) addLoss() {
+	db.Guesses[0]++
+}
