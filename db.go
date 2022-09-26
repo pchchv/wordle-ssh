@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"path/filepath"
 
@@ -58,4 +59,13 @@ func (db *db) save() error {
 		return errors.Wrapf(err, "could not write to database: %s", pathDb)
 	}
 	return nil
+}
+
+// Adds a win to the game statistics
+// It also stores the number of guesses it took, in the range [1,numGuesses]
+func (db *db) addWin(guesses int) {
+	if !(1 <= guesses && guesses <= numGuesses) {
+		panic(fmt.Sprintf("guesses out of range: %d", guesses))
+	}
+	db.Guesses[guesses]++
 }
