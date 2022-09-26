@@ -8,7 +8,15 @@ func getWord() string {
 	return wordsCommon[idx]
 }
 
+// Validates a word from both the common and rare word list
+func isWord(word string) bool {
+	_, ok := wordsSet[word]
+	return ok
+}
+
 var (
+	// Union of all words in both the wordsCommon and the wordsRare lists
+	wordsSet map[string]struct{}
 	// List of commonly used words
 	wordsCommon = []string{
 		"CIGAR", "REBUT", "SISSY", "HUMPH", "AWAKE", "BLUSH", "FOCAL", "EVADE",
