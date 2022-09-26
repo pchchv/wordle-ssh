@@ -3,7 +3,9 @@ package main
 import (
 	"encoding/json"
 	"os"
+	"path/filepath"
 
+	"github.com/google/renameio/maybe"
 	"github.com/pkg/errors"
 )
 
@@ -40,4 +42,20 @@ func (db *db) score() int {
 		score += (100 - 10*i) * guess
 	}
 	return score
+}
+
+// Atomically (best effort) writes the database to dbPath
+func (db *db) save() error {
+	dir := filepath.Dir(pathDb)
+	if err := os.MkdirAll(dir, 0755); err != nil {
+		return errors.Wrapf(err, "could not create data directory: %s", dir)
+	}
+	data, err := json.MarshalIndent(&db, "", "  ")
+	if err != nil {
+		return errors.Wrap(err, "could not serialize database")
+	}
+	if err := maybe.WriteFile(pathDb, data, 0644); err != nil {
+		return errors.Wrapf(err, "could not write to database: %s", pathDb)
+	}
+	return nil
 }
