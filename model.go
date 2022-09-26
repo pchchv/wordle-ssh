@@ -46,3 +46,9 @@ func (m *model) setStatus(msg string, duration time.Duration) tea.Cmd {
 	}
 	return nil
 }
+
+// Stores the given error and prints a message to the status line
+func (m *model) reportError(err error, msg string) tea.Cmd {
+	m.errors = append(m.errors, err)
+	return m.setStatus(msg, 3*time.Second)
+}
