@@ -47,6 +47,20 @@ func (m *model) setStatus(msg string, duration time.Duration) tea.Cmd {
 	return nil
 }
 
+// withDb runs a function in the context of the database. The database is
+// automatically saved at the end.
+func (m *model) withDb(f func(db *db)) tea.Cmd {
+	db, err := loadDb()
+	if err != nil {
+		return m.reportError(err, "Error loading database.")
+	}
+	f(db)
+	if err := db.save(); err != nil {
+		return m.reportError(err, "Error saving database.")
+	}
+	return nil
+}
+
 // Stores the given error and prints a message to the status line
 func (m *model) reportError(err error, msg string) tea.Cmd {
 	m.errors = append(m.errors, err)
