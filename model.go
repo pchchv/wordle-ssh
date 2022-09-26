@@ -5,11 +5,23 @@ import (
 	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 )
 
 const (
 	numGuesses = 6 // Maximum number of guesses you can make
 	numChars   = 5 // Word size in characters
+
+	keyStateUnselected keyState = iota
+	keyStateAbsent
+	keyStatePresent
+	keyStateCorrect
+
+	colorPrimary   = lipgloss.Color("#d7dadc")
+	colorSecondary = lipgloss.Color("#626262")
+	colorSeparator = lipgloss.Color("#9c9c9c")
+	colorYellow    = lipgloss.Color("#b59f3b")
+	colorGreen     = lipgloss.Color("#538d4e")
 )
 
 var _ tea.Model = (*model)(nil)
@@ -108,4 +120,20 @@ func (m *model) doDeleteChar() tea.Cmd {
 		m.gridCol--
 	}
 	return nil
+}
+
+// Returns the appropriate dark mode color for the given key state
+func (s keyState) color() lipgloss.Color {
+	switch s {
+	case keyStateUnselected:
+		return colorPrimary
+	case keyStateAbsent:
+		return colorSecondary
+	case keyStatePresent:
+		return colorYellow
+	case keyStateCorrect:
+		return colorGreen
+	default:
+		panic("invalid key status")
+	}
 }
