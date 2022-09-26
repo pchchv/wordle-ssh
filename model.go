@@ -96,3 +96,8 @@ func (m *model) reset() {
 	// Reset the status message
 	m.resetStatus()
 }
+
+// Exits the program
+func (*model) doExit() tea.Cmd {
+	return tea.Quit
+}
