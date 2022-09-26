@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"time"
 
@@ -118,6 +119,49 @@ func (*model) doExit() tea.Cmd {
 func (m *model) doDeleteChar() tea.Cmd {
 	if !m.gameOver && m.gridCol > 0 {
 		m.gridCol--
+	}
+	return nil
+}
+
+// Accepts the current word
+func (m *model) doAcceptWord() tea.Cmd {
+	if m.gameOver {
+		return nil
+	}
+	// Only accept a word if it is complete
+	if m.gridCol != numChars {
+		return m.setStatus("Your guess must be a 5-letter word.", 1*time.Second)
+	}
+	// Check if the input word is valid
+	word := m.grid[m.gridRow]
+	if !isWord(string(word[:])) {
+		return m.setStatus("That's not a valid word.", 1*time.Second)
+	}
+	// Update the state of the used letters
+	success := true
+	for i := 0; i < numChars; i++ {
+		key := word[i]
+		keyStatus := keyStateAbsent
+		if key == m.word[i] {
+			keyStatus = keyStateCorrect
+		} else {
+			success = false
+			if bytes.IndexByte(m.word[:], key) != -1 {
+				keyStatus = keyStatePresent
+			}
+		}
+		if m.keyStates[key] < keyStatus {
+			m.keyStates[key] = keyStatus
+		}
+	}
+	// Move to the next row
+	m.gridRow++
+	m.gridCol = 0
+	// Check if the game is over
+	if success {
+		return m.doWin()
+	} else if m.gridRow == numGuesses {
+		return m.doLoss()
 	}
 	return nil
 }
