@@ -56,6 +56,10 @@ func (m *model) Init() tea.Cmd {
 	})
 }
 
+func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {}
+
+func (m *model) View() string {}
+
 // Sets the status message, and returns a tea.Cmd that restores the
 // default status message after a delay
 func (m *model) setStatus(msg string, duration time.Duration) tea.Cmd {
