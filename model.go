@@ -269,6 +269,40 @@ func (*model) viewKey(key string, color lipgloss.TerminalColor) string {
 		Render(key)
 }
 
+// Renders a filled-in grid row
+// It chooses the appropriate color for each key
+func (m *model) viewGridRowFilled(word [numChars]byte) string {
+	var keyStates [numChars]keyState
+	letters := m.word
+	// Mark keyStatusAbsent
+	for i := 0; i < numChars; i++ {
+		keyStates[i] = keyStateAbsent
+	}
+	// Mark keyStatusCorrect
+	for i := 0; i < numChars; i++ {
+		if word[i] == m.word[i] {
+			keyStates[i] = keyStateCorrect
+			letters[i] = 0
+		}
+	}
+	// Mark keyStatusPresent
+	for i := 0; i < numChars; i++ {
+		if keyStates[i] == keyStateCorrect {
+			continue
+		}
+		if foundIdx := bytes.IndexByte(letters[:], word[i]); foundIdx != -1 {
+			keyStates[i] = keyStatePresent
+			letters[foundIdx] = 0
+		}
+	}
+	// Render keys
+	var keys [numChars]string
+	for i := 0; i < numChars; i++ {
+		keys[i] = m.viewKey(string(word[i]), keyStates[i].color())
+	}
+	return lipgloss.JoinHorizontal(lipgloss.Bottom, keys[:]...)
+}
+
 // Returns the appropriate dark mode color for the given key state
 func (s keyState) color() lipgloss.Color {
 	switch s {
