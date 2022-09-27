@@ -259,6 +259,25 @@ func (m *model) viewStatus() string {
 	return lipgloss.NewStyle().Foreground(colorPrimary).Render(m.status)
 }
 
+// Renders the entire keyboard, including a border
+// It chooses the appropriate color for keys that have been guessed before
+func (m *model) viewKeyboard() string {
+	topRow := m.viewKeyboardRow([]string{"Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"})
+	midRow := m.viewKeyboardRow([]string{"A", "S", "D", "F", "G", "H", "J", "K", "L"})
+	botRow := m.viewKeyboardRow([]string{"ENTER", "Z", "X", "C", "V", "B", "N", "M", "DELETE"})
+	keys := lipgloss.JoinVertical(
+		lipgloss.Left,
+		lipgloss.NewStyle().Padding(0, 2).Render(topRow),
+		lipgloss.NewStyle().Padding(0, 4).Render(midRow),
+		botRow,
+	)
+	return lipgloss.NewStyle().
+		Border(lipgloss.NormalBorder()).
+		BorderForeground(keyStateUnselected.color()).
+		Padding(0, 1).
+		Render(keys)
+}
+
 // Renders a single row of the keyboard
 // It chooses the appropriate color for keys that have been guessed before
 func (m *model) viewKeyboardRow(keys []string) string {
