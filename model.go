@@ -303,6 +303,24 @@ func (m *model) viewGridRowFilled(word [numChars]byte) string {
 	return lipgloss.JoinHorizontal(lipgloss.Bottom, keys[:]...)
 }
 
+// Renders the current grid row
+// It renders an "_" character for the letter being currently input
+func (m *model) viewGridRowCurrent(row [numChars]byte, rowIdx int) string {
+	var keys [numChars]string
+	for i := 0; i < numChars; i++ {
+		var key string
+		if i < rowIdx {
+			key = string(row[i])
+		} else if i == rowIdx {
+			key = "_"
+		} else {
+			key = " "
+		}
+		keys[i] = m.viewKey(key, colorPrimary)
+	}
+	return lipgloss.JoinHorizontal(lipgloss.Bottom, keys[:]...)
+}
+
 // Returns the appropriate dark mode color for the given key state
 func (s keyState) color() lipgloss.Color {
 	switch s {
