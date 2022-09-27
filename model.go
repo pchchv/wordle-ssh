@@ -166,6 +166,20 @@ func (m *model) doAcceptWord() tea.Cmd {
 	return nil
 }
 
+// Adds one input character to the current word
+func (m *model) doAcceptChar(ch rune) tea.Cmd {
+	// Only accept a character if the current word is incomplete
+	if m.gameOver || !(m.gridRow < numGuesses && m.gridCol < numChars) {
+		return nil
+	}
+	ch = toAsciiUpper(ch)
+	if isAsciiUpper(ch) {
+		m.grid[m.gridRow][m.gridCol] = byte(ch)
+		m.gridCol++
+	}
+	return nil
+}
+
 // Called when the user has guessed the word correctly
 func (m *model) doWin() tea.Cmd {
 	m.gameOver = true
