@@ -259,6 +259,21 @@ func (m *model) viewStatus() string {
 	return lipgloss.NewStyle().Foreground(colorPrimary).Render(m.status)
 }
 
+// Renders a single row of the keyboard
+// It chooses the appropriate color for keys that have been guessed before
+func (m *model) viewKeyboardRow(keys []string) string {
+	keysRendered := make([]string, len(keys))
+	for _, key := range keys {
+		status := keyStateUnselected
+		if len(key) == 1 {
+			key := key[0]
+			status = m.keyStates[key]
+		}
+		keysRendered = append(keysRendered, m.viewKey(key, status.color()))
+	}
+	return lipgloss.JoinHorizontal(lipgloss.Bottom, keysRendered...)
+}
+
 // Renders a key with the given name and color
 func (*model) viewKey(key string, color lipgloss.TerminalColor) string {
 	return lipgloss.NewStyle().
