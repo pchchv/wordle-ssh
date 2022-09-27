@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 	"os/signal"
@@ -91,4 +92,19 @@ func server(addr string) {
 	if err := server.Shutdown(ctx); err != nil {
 		log.Fatalf("could not shutdown server gracefully: %s", err)
 	}
+}
+
+func client() {
+	model := &model{}
+	program := tea.NewProgram(model, teaOptions...)
+	exitCode := 0
+	if err := program.Start(); err != nil {
+		fmt.Fprintf(os.Stderr, "clidle: %s\n", err)
+		exitCode = 1
+	}
+	for _, err := range model.errors {
+		fmt.Fprintf(os.Stderr, "clidle: %s\n", err)
+		exitCode = 1
+	}
+	os.Exit(exitCode)
 }
