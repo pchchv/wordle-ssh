@@ -269,6 +269,21 @@ func (*model) viewKey(key string, color lipgloss.TerminalColor) string {
 		Render(key)
 }
 
+// Renders the grid
+func (m *model) viewGrid() string {
+	var rows [numGuesses]string
+	for i := 0; i < numGuesses; i++ {
+		if i < m.gridRow {
+			rows[i] = m.viewGridRowFilled(m.grid[i])
+		} else if i == m.gridRow && !m.gameOver {
+			rows[i] = m.viewGridRowCurrent(m.grid[i], m.gridCol)
+		} else {
+			rows[i] = m.viewGridRowEmpty()
+		}
+	}
+	return lipgloss.JoinVertical(lipgloss.Left, rows[:]...)
+}
+
 // Renders a filled-in grid row
 // It chooses the appropriate color for each key
 func (m *model) viewGridRowFilled(word [numChars]byte) string {
