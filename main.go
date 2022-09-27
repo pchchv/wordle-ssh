@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -45,7 +46,13 @@ func getEnvValue(v string) string {
 }
 
 func main() {
-	server(getEnvValue("HOST") + ":" + getEnvValue("PORT"))
+	var serv bool
+	flag.BoolVar(&serv, "s", false, "Run server")
+	if serv {
+		server(getEnvValue("HOST") + ":" + getEnvValue("PORT"))
+	} else {
+		client()
+	}
 }
 
 func server(addr string) {
