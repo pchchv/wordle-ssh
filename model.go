@@ -25,7 +25,17 @@ const (
 	colorGreen     = lipgloss.Color("#538d4e")
 )
 
-var _ tea.Model = (*model)(nil)
+var (
+	_ tea.Model = (*model)(nil)
+
+	_controls = fmt.Sprintf("%s %s %s %s %s",
+		lipgloss.NewStyle().Foreground(colorPrimary).Render("ctrl+c"),
+		lipgloss.NewStyle().Foreground(colorSecondary).Render("quit"),
+		lipgloss.NewStyle().Foreground(colorSeparator).Render("//"),
+		lipgloss.NewStyle().Foreground(colorPrimary).Render("ctrl+r"),
+		lipgloss.NewStyle().Foreground(colorSecondary).Render("restart"),
+	)
+)
 
 // Represents the state of a key
 type keyState int
@@ -96,7 +106,29 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, nil
 }
 
-func (m *model) View() string {}
+func (m *model) View() string {
+	status := m.viewStatus()
+	grid := m.viewGrid()
+	keyboard := m.viewKeyboard()
+
+	// Truncate the status if it is too long.
+	if len(status) > m.width && m.width > 3 {
+		status = status[:m.width-3] + "..."
+	}
+
+	// Drop the keyboard if it doesn't fit.
+	height := lipgloss.Height(status) + lipgloss.Height(grid) + lipgloss.Height(keyboard)
+	width := lipgloss.Width(keyboard)
+	if width < lipgloss.Width(status) || width < lipgloss.Width(grid) {
+		width = 0
+	}
+	if m.height < height || m.width < width {
+		keyboard = ""
+	}
+
+	game := lipgloss.JoinVertical(lipgloss.Center, status, grid, keyboard, _controls)
+	return lipgloss.Place(m.width, m.height, lipgloss.Center, lipgloss.Center, game)
+}
 
 // Sets the status message, and returns a tea.Cmd that restores the
 // default status message after a delay
