@@ -259,6 +259,16 @@ func (m *model) viewStatus() string {
 	return lipgloss.NewStyle().Foreground(colorPrimary).Render(m.status)
 }
 
+// Renders a key with the given name and color
+func (*model) viewKey(key string, color lipgloss.TerminalColor) string {
+	return lipgloss.NewStyle().
+		Padding(0, 1).
+		Border(lipgloss.NormalBorder()).
+		BorderForeground(color).
+		Foreground(color).
+		Render(key)
+}
+
 // Returns the appropriate dark mode color for the given key state
 func (s keyState) color() lipgloss.Color {
 	switch s {
