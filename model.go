@@ -56,7 +56,45 @@ func (m *model) Init() tea.Cmd {
 	})
 }
 
-func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {}
+func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+	switch msg := msg.(type) {
+	case msgResetStatus:
+		// If there is more than one pending status message, that means
+		// something else is currently displaying a status message, so we don't
+		// want to overwrite it
+		m.statusPending--
+		if m.statusPending == 0 {
+			m.resetStatus()
+		}
+		return m, nil
+	case tea.KeyMsg:
+		// If any key is pressed, reset the status message
+		m.resetStatus()
+		switch msg.Type {
+		case tea.KeyCtrlC:
+			return m, m.doExit()
+		case tea.KeyCtrlR:
+			m.reset()
+			return m, nil
+		case tea.KeyBackspace:
+			return m, m.doDeleteChar()
+		case tea.KeyEnter:
+			if m.gameOver {
+				m.reset()
+				return m, nil
+			}
+			return m, m.doAcceptWord()
+		case tea.KeyRunes:
+			if len(msg.Runes) == 1 {
+				return m, m.doAcceptChar(msg.Runes[0])
+			}
+		}
+	// If the window is resized, store its new dimensions.
+	case tea.WindowSizeMsg:
+		return m, m.doResize(msg)
+	}
+	return m, nil
+}
 
 func (m *model) View() string {}
 
