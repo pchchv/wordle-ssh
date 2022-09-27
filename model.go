@@ -212,6 +212,11 @@ func (m *model) doResize(msg tea.WindowSizeMsg) tea.Cmd {
 	return nil
 }
 
+// Renders the status line
+func (m *model) viewStatus() string {
+	return lipgloss.NewStyle().Foreground(colorPrimary).Render(m.status)
+}
+
 // Returns the appropriate dark mode color for the given key state
 func (s keyState) color() lipgloss.Color {
 	switch s {
