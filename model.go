@@ -99,7 +99,7 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return m, m.doAcceptChar(msg.Runes[0])
 			}
 		}
-	// If the window is resized, store its new dimensions.
+	// If the window is resized, store its new dimensions
 	case tea.WindowSizeMsg:
 		return m, m.doResize(msg)
 	}
@@ -110,13 +110,11 @@ func (m *model) View() string {
 	status := m.viewStatus()
 	grid := m.viewGrid()
 	keyboard := m.viewKeyboard()
-
-	// Truncate the status if it is too long.
+	// Truncate the status if it is too long
 	if len(status) > m.width && m.width > 3 {
 		status = status[:m.width-3] + "..."
 	}
-
-	// Drop the keyboard if it doesn't fit.
+	// Drop the keyboard if it doesn't fit
 	height := lipgloss.Height(status) + lipgloss.Height(grid) + lipgloss.Height(keyboard)
 	width := lipgloss.Width(keyboard)
 	if width < lipgloss.Width(status) || width < lipgloss.Width(grid) {
@@ -125,7 +123,6 @@ func (m *model) View() string {
 	if m.height < height || m.width < width {
 		keyboard = ""
 	}
-
 	game := lipgloss.JoinVertical(lipgloss.Center, status, grid, keyboard, _controls)
 	return lipgloss.Place(m.width, m.height, lipgloss.Center, lipgloss.Center, game)
 }
@@ -143,8 +140,8 @@ func (m *model) setStatus(msg string, duration time.Duration) tea.Cmd {
 	return nil
 }
 
-// withDb runs a function in the context of the database. The database is
-// automatically saved at the end.
+// Runs a function in the context of the database
+// The database is automatically saved at the end
 func (m *model) withDb(f func(db *db)) tea.Cmd {
 	db, err := loadDb()
 	if err != nil {

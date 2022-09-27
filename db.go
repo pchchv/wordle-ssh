@@ -12,8 +12,9 @@ import (
 
 // File where the game statistics are stored
 type db struct {
-	// Guesses stores the win statistics of each game. Guesses[0] is the number
-	// of games that were lost, Guesses[1] is the number of games that were won
+	// Guesses stores the win statistics of each game
+	// Guesses[0] is the number of games that were lost
+	// Guesses[1] is the number of games that were won
 	// with 1 guess, etc
 	Guesses [numGuesses + 1]int `json:"guesses"`
 }
@@ -70,7 +71,7 @@ func (db *db) addWin(guesses int) {
 	db.Guesses[guesses]++
 }
 
-// addLoss adds a loss to the game statistics.
+// Adds a loss to the game statistics
 func (db *db) addLoss() {
 	db.Guesses[0]++
 }
