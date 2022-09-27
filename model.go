@@ -206,3 +206,11 @@ func (s keyState) color() lipgloss.Color {
 		panic("invalid key status")
 	}
 }
+
+// Converts a rune to uppercase if it is between A-Z
+func toAsciiUpper(r rune) rune {
+	if 'a' <= r && r <= 'z' {
+		r -= 'a' - 'A'
+	}
+	return r
+}
