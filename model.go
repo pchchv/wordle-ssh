@@ -214,3 +214,8 @@ func toAsciiUpper(r rune) rune {
 	}
 	return r
 }
+
+// Checks if a rune is between A-Z
+func isAsciiUpper(r rune) bool {
+	return 'A' <= r && r <= 'Z'
+}
