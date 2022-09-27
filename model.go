@@ -321,6 +321,18 @@ func (m *model) viewGridRowCurrent(row [numChars]byte, rowIdx int) string {
 	return lipgloss.JoinHorizontal(lipgloss.Bottom, keys[:]...)
 }
 
+// Renders an empty grid row
+// If the grid is locked, the keys are grayed out
+func (m *model) viewGridRowEmpty() string {
+	keyState := keyStateUnselected
+	if m.gameOver {
+		keyState = keyStateAbsent
+	}
+	key := m.viewKey(" ", keyState.color())
+	keys := [numChars]string{key, key, key, key, key}
+	return lipgloss.JoinHorizontal(lipgloss.Bottom, keys[:]...)
+}
+
 // Returns the appropriate dark mode color for the given key state
 func (s keyState) color() lipgloss.Color {
 	switch s {
