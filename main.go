@@ -15,6 +15,7 @@ import (
 	bm "github.com/charmbracelet/wish/bubbletea"
 	lm "github.com/charmbracelet/wish/logging"
 	"github.com/gliderlabs/ssh"
+	"github.com/joho/godotenv"
 )
 
 const envHostKey = "_CLIDLE_HOSTKEY"
@@ -25,6 +26,22 @@ var (
 	teaOptions  = []tea.ProgramOption{tea.WithAltScreen(), tea.WithOutput(os.Stderr)}
 	pathDb      = filepath.Join(pathClidle, "db.json")
 )
+
+func init() {
+	// Load values from .env into the system
+	if err := godotenv.Load(); err != nil {
+		log.Panic("No .env file found")
+	}
+}
+
+func getEnvValue(v string) string {
+	// Getting a value. Outputs a panic if the value is missing
+	value, exist := os.LookupEnv(v)
+	if !exist {
+		log.Panicf("Value %v does not exist", v)
+	}
+	return value
+}
 
 func main() {}
 
