@@ -205,6 +205,13 @@ func (m *model) doLoss() tea.Cmd {
 	)
 }
 
+// Updates the size of the window
+func (m *model) doResize(msg tea.WindowSizeMsg) tea.Cmd {
+	m.height = msg.Height
+	m.width = msg.Width
+	return nil
+}
+
 // Returns the appropriate dark mode color for the given key state
 func (s keyState) color() lipgloss.Color {
 	switch s {
