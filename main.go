@@ -43,7 +43,9 @@ func getEnvValue(v string) string {
 	return value
 }
 
-func main() {}
+func main() {
+	server(getEnvValue("HOST") + ":" + getEnvValue("PORT"))
+}
 
 func server(addr string) {
 	withHostKey := wish.WithHostKeyPath(pathHostKey)
