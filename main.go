@@ -23,7 +23,7 @@ import (
 const envHostKey = "_CLIDLE_HOSTKEY"
 
 var (
-	pathClidle  = filepath.Join(xdg.DataHome, "clidle")
+	pathClidle  = filepath.Join(xdg.DataHome, "clidle") // Path to the local data directory
 	pathHostKey = filepath.Join(pathClidle, "hostkey")
 	teaOptions  = []tea.ProgramOption{tea.WithAltScreen(), tea.WithOutput(os.Stderr)}
 	pathDb      = filepath.Join(pathClidle, "db.json")

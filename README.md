@@ -16,4 +16,21 @@ After submitting a guess, the letters will turn green, yellow, or gray.
 - **Green:** The letter is correct, and is in the correct position.
 - **Yellow:** The letter is present in the solution, but is in the wrong position.
 - **Gray:** The letter is not present in the solution.
-## 
+
+### Running the server
+
+```
+go run main.go -s
+```
+
+### Running the client
+
+```
+go run main.go
+```
+
+### SSH connection
+
+```
+ssh localhost -p 1337
+```
